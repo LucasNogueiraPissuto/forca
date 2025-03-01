@@ -1,0 +1,47 @@
+{
+  "level": [
+    {
+      "level-name": "easy",
+      "death-time": 0,
+      "body-pieces": 16,
+      "more-suggestions": true,
+      "max-errors": 10,
+      "hints-allowed": true,
+      "timer": false
+    },
+    {
+      "level-name": "medium",
+      "death-time": 0,
+      "body-pieces": 10,
+      "more-suggestions": false,
+      "max-errors": 8,
+      "hints-allowed": false,
+      "timer": false
+    },
+    {
+      "level-name": "hard",
+      "death-time": 0,
+      "body-pieces": 6,
+      "more-suggestions": false,
+      "max-errors": 6,
+      "hints-allowed": false,
+      "timer": true
+    },
+    {
+      "level-name": "caos",
+      "death-time": 0,
+      "body-pieces": 6,
+      "more-suggestions": false,
+      "max-errors": 6,
+      "hints-allowed": false,
+      "timer": true,
+      "chaos-mode": {
+        "shuffle-interval": 10,
+        "disappearance-interval": 10,
+        "initial-delay": 15,
+        "hardcore-mode": false,
+        "strategic-mode": false
+      }
+    }
+  ]
+}

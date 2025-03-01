@@ -1,0 +1,14 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://sysuser:6PKupGdDxZsWT9UF@cluster0.or2mc.mongodb.net/ # mongodb+srv://sysuser:6PKupGdDxZsWT9UF@cluster0.b3l60.mongodb.net/
+      database: Jogos
+      # options:
+        # authSource: admin
+        # authMechanism: SCRAM-SHA-1
+        # enable-ssl: true
+        # ssl-context:
+          # trustStore:
+            # type: JKS
+            #location: path_to_truststore
+            #password: truststore_password
