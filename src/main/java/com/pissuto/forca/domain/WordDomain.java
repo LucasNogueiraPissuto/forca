@@ -1,21 +1,24 @@
-package com.pissuto.forca.app.to;
+package com.pissuto.forca.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WordTo {
+@Document(collection = "words")
+public class WordDomain {
+    @Id
+    private String id;
 
-    @JsonProperty("palavra")
     private String palavra;
 
-    @JsonProperty("dicas")
     private List<String> dicas;
 }

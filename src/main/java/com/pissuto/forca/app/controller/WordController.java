@@ -1,5 +1,6 @@
 package com.pissuto.forca.app.controller;
 
+import com.pissuto.forca.app.dto.WordDto;
 import com.pissuto.forca.app.services.ServiceWord;
 import com.pissuto.forca.app.to.WordTo;
 import com.pissuto.forca.infra.exceptions.BussinesException;
@@ -18,7 +19,7 @@ public class WordController {
     private ServiceWord serviceWord;
 
     @PostMapping
-    public ResponseEntity<WordController> cadastroPalavra(@RequestBody WordTo body) throws BussinesException {
+    public ResponseEntity<WordDto> cadastroPalavra(@RequestBody WordTo body) throws BussinesException {
         return ResponseEntity.ok(serviceWord.saveNewWord(body));
     }
 }
