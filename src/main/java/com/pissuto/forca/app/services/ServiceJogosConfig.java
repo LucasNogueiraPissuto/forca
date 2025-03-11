@@ -2,7 +2,7 @@ package com.pissuto.forca.app.services;
 
 import com.pissuto.forca.app.dto.ConfigJogosDto;
 import com.pissuto.forca.app.repository.ConfigRepository;
-import com.pissuto.forca.app.to.ConfigJogosTo;
+import com.pissuto.forca.app.to.ConfigJogosTo.ConfigJogosTo;
 import com.pissuto.forca.domain.ConfigJogosDomain;
 import com.pissuto.forca.infra.exceptions.BussinesException;
 import org.springframework.beans.factory.annotation.Autowired;

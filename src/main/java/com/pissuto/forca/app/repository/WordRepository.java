@@ -12,8 +12,6 @@ public interface WordRepository extends MongoRepository<WordDomain, String> {
 
     Optional<WordDomain> findById (String id);
 
-    //ConfigJogosDomain findByJogo(String levels);
-
     void deleteById (String id);
 
     WordDomain save (WordDomain palavra);

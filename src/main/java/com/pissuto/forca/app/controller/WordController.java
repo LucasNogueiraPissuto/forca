@@ -3,13 +3,11 @@ package com.pissuto.forca.app.controller;
 import com.pissuto.forca.app.dto.WordDto;
 import com.pissuto.forca.app.services.ServiceWord;
 import com.pissuto.forca.app.to.WordTo;
+import com.pissuto.forca.domain.WordDomain;
 import com.pissuto.forca.infra.exceptions.BussinesException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/forca/palavra")
