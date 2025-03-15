@@ -21,4 +21,9 @@ public class WordDomain {
     private String palavra;
 
     private List<String> dicas;
+
+    public void atualizar(String palavra, List<String> dicas) {
+        this.palavra = palavra;
+        this.dicas = dicas;
+    }
 }

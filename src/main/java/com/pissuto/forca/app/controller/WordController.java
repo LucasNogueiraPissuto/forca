@@ -20,4 +20,9 @@ public class WordController {
     public ResponseEntity<WordDto> cadastroPalavra(@RequestBody WordTo body) throws BussinesException {
         return ResponseEntity.ok(serviceWord.saveNewWord(body));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<WordDto> atualizarPalavra(@RequestBody WordTo body, @PathVariable String id){
+        return ResponseEntity.ok(serviceWord.atualizarPalavra(body, id));
+    }
 }

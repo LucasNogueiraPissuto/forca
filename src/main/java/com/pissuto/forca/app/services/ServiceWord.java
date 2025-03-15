@@ -53,4 +53,20 @@ public class ServiceWord {
             throw new BussinesException("Palavra não encontrada para exclusão");
         }
     }
+
+    public WordDto atualizarPalavra(WordTo body, String id) {
+        Optional<WordDomain> palavraExistente = wordRepository.findById(id);
+        WordDomain palavraExistenteDomain;
+
+        if(palavraExistente.isPresent()){
+            palavraExistenteDomain = palavraExistente.get();
+            palavraExistenteDomain.atualizar(body.getPalavra(), body.getDicas());
+            wordRepository.save(palavraExistenteDomain);
+        }
+        else {
+            throw new RuntimeException("Palavra não encontrada");
+        }
+
+        return parseWordDto(palavraExistenteDomain);
+    }
 }

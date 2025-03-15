@@ -1,6 +1,5 @@
 package com.pissuto.forca.app.repository;
 
-import com.pissuto.forca.domain.ConfigJogosDomain;
 import com.pissuto.forca.domain.WordDomain;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
