@@ -25,4 +25,9 @@ public class WordController {
     public ResponseEntity<WordDto> atualizarPalavra(@RequestBody WordTo body, @PathVariable String id){
         return ResponseEntity.ok(serviceWord.atualizarPalavra(body, id));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<WordDto> deletarPalavra(@PathVariable String id) throws BussinesException {
+        return ResponseEntity.ok(serviceWord.deleteWord(id));
+    }
 }
