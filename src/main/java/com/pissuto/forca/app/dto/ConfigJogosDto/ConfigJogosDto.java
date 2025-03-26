@@ -1,4 +1,4 @@
-package com.pissuto.forca.app.dto;
+package com.pissuto.forca.app.dto.ConfigJogosDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,31 +15,4 @@ public class ConfigJogosDto {
 
     private String id;
     private List<NivelConfigDto> levels;
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class NivelConfigDto {
-        private String levelName;
-        private int deathTime;
-        private int bodyPieces;
-        private boolean moreSuggestions;
-        private int maxErrors;
-        private boolean hintsAllowed;
-        private boolean timer;
-        private ModoCaosDto chaosMode;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ModoCaosDto {
-        private int shuffleInterval;
-        private int disappearanceInterval;
-        private int initialDelay;
-        private boolean hardcoreMode;
-        private boolean strategicMode;
-    }
 }
