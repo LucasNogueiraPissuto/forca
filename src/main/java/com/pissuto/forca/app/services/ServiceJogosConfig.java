@@ -1,6 +1,8 @@
 package com.pissuto.forca.app.services;
 
-import com.pissuto.forca.app.dto.ConfigJogosDto;
+import com.pissuto.forca.app.dto.ConfigJogosDto.ConfigJogosDto;
+import com.pissuto.forca.app.dto.ConfigJogosDto.ModoCaosDto;
+import com.pissuto.forca.app.dto.ConfigJogosDto.NivelConfigDto;
 import com.pissuto.forca.app.repository.ConfigRepository;
 import com.pissuto.forca.app.to.ConfigJogosTo.ConfigJogosTo;
 import com.pissuto.forca.domain.ConfigJogosDomain;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,7 +56,7 @@ public class ServiceJogosConfig {
     private ConfigJogosDto parsedConfigJogoDto(ConfigJogosDomain saved) {
         return new ConfigJogosDto(
                 saved.getId(),
-                saved.getLevels().stream().map(level -> new ConfigJogosDto.NivelConfigDto(
+                saved.getLevels().stream().map(level -> new NivelConfigDto(
                         level.getLevelName(),
                         level.getDeathTime(),
                         level.getBodyPieces(),
@@ -61,7 +64,7 @@ public class ServiceJogosConfig {
                         level.getMaxErrors(),
                         level.isHintsAllowed(),
                         level.isTimer(),
-                        level.getChaosMode() != null ? new ConfigJogosDto.ModoCaosDto(
+                        level.getChaosMode() != null ? new ModoCaosDto(
                                 level.getChaosMode().getShuffleInterval(),
                                 level.getChaosMode().getDisappearanceInterval(),
                                 level.getChaosMode().getInitialDelay(),
@@ -74,6 +77,13 @@ public class ServiceJogosConfig {
 
     public List<ConfigJogosDomain> findAllConfig() {
         return configRepository.findAll();
+    }
+
+    public ConfigJogosDto retornaConfiguracao(String id) throws BussinesException {
+        Optional<ConfigJogosDomain> optionalConfigJogos = configRepository.findById(id);
+        ConfigJogosDomain configJogosDomain = optionalConfigJogos.get();
+
+        return parsedConfigJogoDto(configJogosDomain);
     }
 }
 
