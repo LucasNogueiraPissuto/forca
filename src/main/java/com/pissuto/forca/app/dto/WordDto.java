@@ -16,4 +16,5 @@ public class WordDto {
     private String id;
     private String palavra;
     private List<String> dicas;
+    private String mensagem;
 }
