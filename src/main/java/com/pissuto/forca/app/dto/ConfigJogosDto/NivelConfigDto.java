@@ -17,5 +17,5 @@ public class NivelConfigDto {
     private int maxErrors;
     private boolean hintsAllowed;
     private boolean timer;
-    private ConfigJogosDto.ModoCaosDto chaosMode;
+    private ModoCaosDto chaosMode;
 }
