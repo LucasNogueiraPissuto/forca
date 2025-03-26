@@ -1,6 +1,6 @@
 package com.pissuto.forca.app.controller;
 
-import com.pissuto.forca.app.dto.ConfigJogosDto;
+import com.pissuto.forca.app.dto.ConfigJogosDto.ConfigJogosDto;
 import com.pissuto.forca.app.services.ServiceJogosConfig;
 import com.pissuto.forca.app.to.ConfigJogosTo.ConfigJogosTo;
 import com.pissuto.forca.infra.exceptions.BussinesException;
@@ -12,14 +12,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/forca/configure")
 public class ConfigureController {
 
-    @GetMapping()
-    public String CheckConfigure() {
-
-        return "retorna configuração";
-    }
-
     @Autowired
     private ServiceJogosConfig serviceJogosConfig;
+
+    @GetMapping("/{id}")
+    public ConfigJogosDto CheckConfigure(@PathVariable String id) throws BussinesException {
+       return serviceJogosConfig.retornaConfiguracao(id);
+    }
 
     @PostMapping
     public ResponseEntity<ConfigJogosDto> createNewGameConfig(@RequestBody ConfigJogosTo body) throws BussinesException {
