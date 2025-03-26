@@ -26,7 +26,12 @@ public class ServiceWord {
         saved = wordRepository.save(saved);
 
         if (saved.getId() != null && !saved.getId().isBlank()) {
-            return parseWordDto(saved);
+            WordDto novaPalavra = new WordDto(
+                    saved.getId(),
+                    saved.getPalavra(),
+                    saved.getDicas(),
+                    "Palavra cadastrada com sucesso");
+            return novaPalavra;
         } else {
             throw new BussinesException("Não foi possível salvar a palavra");
         }
@@ -36,19 +41,23 @@ public class ServiceWord {
         return new WordDto(
                 saved.getId(),
                 saved.getPalavra(),
-                saved.getDicas()
+                saved.getDicas(),
+                ""
         );
     }
 
-    public List<WordDto> findAllWords() {
-        return wordRepository.findAll().stream()
-                .map(this::parseWordDto)
-                .collect(Collectors.toList());
-    }
+    public WordDto deleteWord(String id) throws BussinesException {
+        Optional<WordDomain> palavraOptional = wordRepository.findById(id);
 
-    public void deleteWord(String id) throws BussinesException {
-        if (wordRepository.existsById(id)) {
+        if (palavraOptional.isPresent()) {
+            WordDomain palavra = palavraOptional.get();
             wordRepository.deleteById(id);
+
+            return new WordDto(
+                    palavra.getId(),
+                    palavra.getPalavra(),
+                    palavra.getDicas(),
+                    "Palavra deletada com sucesso");
         } else {
             throw new BussinesException("Palavra não encontrada para exclusão");
         }
@@ -69,4 +78,5 @@ public class ServiceWord {
 
         return parseWordDto(palavraExistenteDomain);
     }
+
 }
