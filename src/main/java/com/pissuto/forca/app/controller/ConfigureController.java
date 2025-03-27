@@ -16,8 +16,8 @@ public class ConfigureController {
     private ServiceJogosConfig serviceJogosConfig;
 
     @GetMapping("/{id}")
-    public ConfigJogosDto CheckConfigure(@PathVariable String id) throws BussinesException {
-       return serviceJogosConfig.retornaConfiguracao(id);
+    public ResponseEntity<ConfigJogosDto> CheckConfigure(@PathVariable String id) throws BussinesException {
+       return ResponseEntity.ok(serviceJogosConfig.retornaConfiguracao(id));
     }
 
     @PostMapping
