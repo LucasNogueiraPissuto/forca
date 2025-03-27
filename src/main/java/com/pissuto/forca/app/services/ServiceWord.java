@@ -26,12 +26,7 @@ public class ServiceWord {
         saved = wordRepository.save(saved);
 
         if (saved.getId() != null && !saved.getId().isBlank()) {
-            WordDto novaPalavra = new WordDto(
-                    saved.getId(),
-                    saved.getPalavra(),
-                    saved.getDicas(),
-                    "Palavra cadastrada com sucesso");
-            return novaPalavra;
+            return parseWordDto(saved, "Palavra cadastrada com sucesso!");
         } else {
             throw new BussinesException("Não foi possível salvar a palavra");
         }
