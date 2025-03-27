@@ -37,12 +37,12 @@ public class ServiceWord {
         }
     }
 
-    private WordDto parseWordDto(WordDomain saved) {
+    private WordDto parseWordDto(WordDomain saved, String mensagem) {
         return new WordDto(
                 saved.getId(),
                 saved.getPalavra(),
                 saved.getDicas(),
-                ""
+                mensagem
         );
     }
 
@@ -76,7 +76,7 @@ public class ServiceWord {
             throw new RuntimeException("Palavra não encontrada");
         }
 
-        return parseWordDto(palavraExistenteDomain);
+        return parseWordDto(palavraExistenteDomain, "Palavra atualizada com sucesso!");
     }
 
 }
