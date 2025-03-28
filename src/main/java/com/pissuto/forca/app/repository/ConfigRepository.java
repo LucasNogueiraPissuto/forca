@@ -1,6 +1,6 @@
 package com.pissuto.forca.app.repository;
 
-import com.pissuto.forca.domain.ConfigJogosDomain;
+import com.pissuto.forca.domain.ConfigJogosDomain.ConfigJogosDomain;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

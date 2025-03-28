@@ -5,7 +5,9 @@ import com.pissuto.forca.app.dto.ConfigJogosDto.ModoCaosDto;
 import com.pissuto.forca.app.dto.ConfigJogosDto.NivelConfigDto;
 import com.pissuto.forca.app.repository.ConfigRepository;
 import com.pissuto.forca.app.to.ConfigJogosTo.ConfigJogosTo;
-import com.pissuto.forca.domain.ConfigJogosDomain;
+import com.pissuto.forca.domain.ConfigJogosDomain.ConfigJogosDomain;
+import com.pissuto.forca.domain.ConfigJogosDomain.ModoCaosDomain;
+import com.pissuto.forca.domain.ConfigJogosDomain.NivelConfigDomain;
 import com.pissuto.forca.infra.exceptions.BussinesException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ public class ServiceJogosConfig {
     public ConfigJogosDto saveNewConfig(ConfigJogosTo body) throws BussinesException {
         var saved = new ConfigJogosDomain();
         saved.setLevels(body.getLevels().stream().map(levelTo -> {
-            var level = new ConfigJogosDomain.NivelConfigDomain();
+            var level = new NivelConfigDomain();
             level.setLevelName(levelTo.getLevelName());
             level.setDeathTime(levelTo.getDeathTime());
             level.setBodyPieces(levelTo.getBodyPieces());
@@ -33,7 +35,7 @@ public class ServiceJogosConfig {
             level.setTimer(levelTo.isTimer());
 
             if (levelTo.getChaosMode() != null) {
-                var chaosMode = new ConfigJogosDomain.ModoCaosDomain();
+                var chaosMode = new ModoCaosDomain();
                 chaosMode.setShuffleInterval(levelTo.getChaosMode().getShuffleInterval());
                 chaosMode.setDisappearanceInterval(levelTo.getChaosMode().getDisappearanceInterval());
                 chaosMode.setInitialDelay(levelTo.getChaosMode().getInitialDelay());
