@@ -22,6 +22,11 @@ public class WordDomain {
 
     private List<String> dicas;
 
+    public WordDomain(String palavra, List<String> dicas) {
+        this.palavra = palavra;
+        this.dicas = dicas;
+    }
+
     public void atualizar(String palavra, List<String> dicas) {
         this.palavra = palavra;
         this.dicas = dicas;

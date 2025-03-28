@@ -19,10 +19,7 @@ public class ServiceWord {
     private WordRepository wordRepository;
 
     public WordDto saveNewWord(WordTo body) throws BussinesException {
-        var saved = new WordDomain();
-        saved.setPalavra(body.getPalavra());
-        saved.setDicas(body.getDicas());
-
+        var saved = new WordDomain(body.getPalavra(), body.getDicas());
         saved = wordRepository.save(saved);
 
         if (saved.getId() != null && !saved.getId().isBlank()) {
