@@ -13,6 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConfigJogosTo {
-    @JsonProperty("level")
+    @JsonProperty("levels")
     private List<NivelConfigTo> levels;
 }

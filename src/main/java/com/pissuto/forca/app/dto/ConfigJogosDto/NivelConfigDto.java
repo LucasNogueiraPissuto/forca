@@ -12,7 +12,6 @@ import lombok.Setter;
 public class NivelConfigDto {
     private String levelName;
     private int deathTime;
-    private int bodyPieces;
     private boolean moreSuggestions;
     private int maxErrors;
     private boolean hintsAllowed;

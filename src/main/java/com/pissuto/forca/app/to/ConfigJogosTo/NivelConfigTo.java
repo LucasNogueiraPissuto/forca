@@ -11,27 +11,24 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NivelConfigTo {
-    @JsonProperty("level-name")
+    @JsonProperty("levelName")
     private String levelName;
 
-    @JsonProperty("death-time")
+    @JsonProperty("deathTime")
     private int deathTime;
 
-    @JsonProperty("body-pieces")
-    private int bodyPieces;
-
-    @JsonProperty("more-suggestions")
+    @JsonProperty("moreSuggestions")
     private boolean moreSuggestions;
 
-    @JsonProperty("max-errors")
+    @JsonProperty("maxErrors")
     private int maxErrors;
 
-    @JsonProperty("hints-allowed")
+    @JsonProperty("hintsAllowed")
     private boolean hintsAllowed;
 
     @JsonProperty("timer")
     private boolean timer;
 
-    @JsonProperty("chaos-mode")
+    @JsonProperty("chaosMode")
     private ModoCaosTo chaosMode;
 }

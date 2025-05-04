@@ -11,18 +11,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ModoCaosTo {
-    @JsonProperty("shuffle-interval")
+    @JsonProperty("shuffleInterval")
     private int shuffleInterval;
 
-    @JsonProperty("disappearance-interval")
+    @JsonProperty("disappearanceInterval")
     private int disappearanceInterval;
 
-    @JsonProperty("initial-delay")
+    @JsonProperty("initialDelay")
     private int initialDelay;
 
-    @JsonProperty("hardcore-mode")
+    @JsonProperty("hardcoreMode")
     private boolean hardcoreMode;
 
-    @JsonProperty("strategic-mode")
+    @JsonProperty("strategicMode")
     private boolean strategicMode;
 }

@@ -13,12 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 public class ForcaJogoResponseDto {
 
-    private String gameId;
+    private int gameId;
     private String palavraSecreta;
     private String palavraMascarada;
     private List<String> palpites;
-    private int bodyPieces;
     private int maxErrors;
+    private String email;
     private String status;
-
 }

@@ -1,5 +1,6 @@
 package com.pissuto.forca.app.controller;
 
+import com.pissuto.forca.app.dto.ForcaJogadorResponseDto;
 import com.pissuto.forca.app.dto.ForcaJogoResponseDto;
 import com.pissuto.forca.app.services.ServiceForcaJogo;
 import com.pissuto.forca.app.to.PalpiteTo;
@@ -17,13 +18,13 @@ public class ForcaJogoController {
 
     public String dificuldade = "medium";
 
-    @PostMapping("/iniciar")
-    private ResponseEntity<ForcaJogoResponseDto> inciarJogo() {
-        return ResponseEntity.ok(serviceForcaJogo.iniciarNovoJogo(dificuldade));
+    @GetMapping("/iniciar/{email}")
+    private ResponseEntity<ForcaJogoResponseDto> inciarJogo(@PathVariable String email) throws BussinesException {
+        return ResponseEntity.ok(serviceForcaJogo.iniciarNovoJogo(dificuldade, email));
     }
 
     @PostMapping("/{id}/palpite")
-    private ResponseEntity<ForcaJogoResponseDto> validarPalpite(@PathVariable String id, @RequestBody PalpiteTo palpite) throws BussinesException {
+    private ResponseEntity<ForcaJogoResponseDto> validarPalpite(@PathVariable int id, @RequestBody PalpiteTo palpite) throws BussinesException {
         return ResponseEntity.ok(serviceForcaJogo.validarPalpite(id, palpite));
     }
 }

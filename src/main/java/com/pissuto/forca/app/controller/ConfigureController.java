@@ -22,6 +22,7 @@ public class ConfigureController {
 
     @PostMapping
     public ResponseEntity<ConfigJogosDto> createNewGameConfig(@RequestBody ConfigJogosTo body) throws BussinesException {
+
         return ResponseEntity.ok(serviceJogosConfig.saveNewConfig(body));
     }
 }

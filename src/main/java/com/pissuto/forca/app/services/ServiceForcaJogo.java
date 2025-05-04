@@ -1,18 +1,20 @@
 package com.pissuto.forca.app.services;
 
+import com.pissuto.forca.app.dto.ForcaJogadorResponseDto;
 import com.pissuto.forca.app.dto.ForcaJogoResponseDto;
-import com.pissuto.forca.app.dto.WordDto;
 import com.pissuto.forca.app.repository.ConfigRepository;
-import com.pissuto.forca.app.repository.ForcaJogoRepository;
+import com.pissuto.forca.app.repository.ForcaJogadorRepository;
 import com.pissuto.forca.app.repository.WordRepository;
 import com.pissuto.forca.app.to.PalpiteTo;
 import com.pissuto.forca.app.to.WordTo;
 import com.pissuto.forca.domain.ConfigJogosDomain.ConfigJogosDomain;
 import com.pissuto.forca.domain.ConfigJogosDomain.NivelConfigDomain;
+import com.pissuto.forca.domain.ForcaJogadorDomain;
 import com.pissuto.forca.domain.ForcaJogoDomain;
 import com.pissuto.forca.domain.WordDomain;
 import com.pissuto.forca.infra.exceptions.BussinesException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ import java.util.Random;
 public class ServiceForcaJogo {
 
     @Autowired
-    private ForcaJogoRepository forcaJogoRepository;
+    private ForcaJogadorRepository forcaJogadorRepository;
 
     @Autowired
     private WordRepository wordRepository;
@@ -34,44 +36,56 @@ public class ServiceForcaJogo {
 
     private final Random random = new Random();
 
-    public ForcaJogoResponseDto iniciarNovoJogo(String dificuldade) {
+
+    public ForcaJogoResponseDto iniciarNovoJogo(String dificuldade, String emailUsuario) throws BussinesException {
         WordTo palavraSelecionada = converterDomain(buscarPalavraAleatoria());
         String palavraMascarada = mascararPalavra(palavraSelecionada);
-        List<String> palpites = new ArrayList<String>();
+        List<String> palpites = new ArrayList<>();
 
-
-        //Refatorar e fazer um findByLevel para trazer as informações somente do level selecionado.
         ConfigJogosDomain config = configRepository.findAll().get(0);
-
         NivelConfigDomain configLevel = config.getLevels()
                 .stream()
                 .filter(l -> l.getLevelName().equalsIgnoreCase(dificuldade))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Dificuldade não encontrada: " + dificuldade));
 
+        Optional<ForcaJogadorDomain> jogadorExistente = forcaJogadorRepository.findByEmail(emailUsuario);
+        ForcaJogadorDomain jogadorDomain;
+        int idJogo;
+
+        if (jogadorExistente.isPresent()) {
+            jogadorDomain = jogadorExistente.get();
+            idJogo = jogadorDomain.getForcaJogoDomains().size() + 1;
+        } else {
+            jogadorDomain = new ForcaJogadorDomain();
+            jogadorDomain.setEmail(emailUsuario);
+            idJogo = 1;
+        }
+
         ForcaJogoDomain jogoDomain = new ForcaJogoDomain(
+                idJogo,
                 palavraSelecionada.getPalavra(),
                 palavraMascarada,
                 palpites,
                 configLevel.getMaxErrors(),
-                configLevel.getBodyPieces(),
                 "Em andamento..."
         );
 
-        jogoDomain = forcaJogoRepository.save(jogoDomain);
+        jogadorDomain.getForcaJogoDomains().add(jogoDomain);
+        forcaJogadorRepository.save(jogadorDomain);
 
-        return converterJogoDto(jogoDomain);
+        return converterJogoDto(jogoDomain, emailUsuario);
     }
 
-    public ForcaJogoResponseDto validarPalpite(String idJogo, PalpiteTo palpite) throws BussinesException {
+    public ForcaJogoResponseDto validarPalpite(int idJogo, PalpiteTo palpite) throws BussinesException {
 
-        Optional<ForcaJogoDomain> jogoAtualOptional = forcaJogoRepository.findById(idJogo);
+        ForcaJogadorDomain jogador = forcaJogadorRepository.findByEmail(palpite.getEmail())
+                .orElseThrow(() -> new BussinesException("Jogador não existe"));
 
-        if (jogoAtualOptional.isEmpty()) {
-            throw new BussinesException("Sessão de jogo não existe");
-        }
-
-        ForcaJogoDomain jogoAtual = jogoAtualOptional.get();
+        ForcaJogoDomain jogoAtual = jogador.getForcaJogoDomains().stream()
+                .filter(jogo -> jogo.getGameId() == idJogo)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Jogo não encontrado"));
 
         System.out.println("Palpite: " + palpite.getPalpite());
 
@@ -85,7 +99,6 @@ public class ServiceForcaJogo {
         }
 
         palpites.add(letraPalpite);
-
         StringBuilder novaMascarada = new StringBuilder(palavraMascarada);
 
         boolean letraEncontrada = false;
@@ -100,23 +113,22 @@ public class ServiceForcaJogo {
         jogoAtual.setPalpites(palpites);
 
         if (!letraEncontrada) {
-            int maxErrors = jogoAtual.getMaxErrors();
-            jogoAtual.setMaxErrors(maxErrors - 1);
+            jogoAtual.setMaxErrors(jogoAtual.getMaxErrors() - 1);
         }
-        
+
         if (!novaMascarada.toString().contains("_")) {
             jogoAtual.setStatus("Vitória");
         } else if (jogoAtual.getMaxErrors() < 0) {
             jogoAtual.setStatus("Derrota");
         }
 
-        forcaJogoRepository.save(jogoAtual);
+        forcaJogadorRepository.save(jogador);
 
-        if (jogoAtual.getStatus() == "Vitória" || jogoAtual.getStatus() == "Derrota") {
+        if ("Vitória".equals(jogoAtual.getStatus()) || "Derrota".equals(jogoAtual.getStatus())) {
             throw new BussinesException("Jogo finalizado.");
         }
 
-        return converterJogoDto(jogoAtual);
+        return converterJogoDto(jogoAtual, palpite.getEmail());
     }
 
 
@@ -124,14 +136,14 @@ public class ServiceForcaJogo {
         return new WordTo(palavra.getPalavra(), palavra.getDicas());
     }
 
-    public ForcaJogoResponseDto converterJogoDto(ForcaJogoDomain forcaJogoDomain) {
+    public ForcaJogoResponseDto converterJogoDto(ForcaJogoDomain forcaJogoDomain, String email) {
         return new ForcaJogoResponseDto(
                 forcaJogoDomain.getGameId(),
                 forcaJogoDomain.getPalavraSecreta(),
                 forcaJogoDomain.getPalavraMascarada(),
                 forcaJogoDomain.getPalpites(),
-                forcaJogoDomain.getBodyPieces(),
                 forcaJogoDomain.getMaxErrors(),
+                email,
                 forcaJogoDomain.getStatus());
     }
 

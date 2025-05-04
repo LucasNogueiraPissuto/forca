@@ -12,6 +12,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PalpiteTo {
 
+    @JsonProperty("email")
+    private String email;
+
     @JsonProperty("palpite")
     private String palpite;
 

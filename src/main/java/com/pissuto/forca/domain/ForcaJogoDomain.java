@@ -12,12 +12,10 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Document(collection = "ForcaJogos")
 public class ForcaJogoDomain {
 
-    @Id
-    private String gameId;
+    private int gameId;
 
     private String palavraSecreta;
 
@@ -25,17 +23,15 @@ public class ForcaJogoDomain {
 
     private List<String> palpites;
 
-    private int bodyPieces;
-
     private int maxErrors;
 
     private String status;
 
-    public ForcaJogoDomain(String palavraSecreta, String palavraMascarada, List<String> palpites, int bodyPieces, int maxErrors, String status) {
+    public ForcaJogoDomain(int gameId, String palavraSecreta, String palavraMascarada, List<String> palpites, int maxErrors, String status) {
+        this.gameId = gameId;
         this.palavraSecreta = palavraSecreta;
         this.palavraMascarada = palavraMascarada;
         this.palpites = palpites;
-        this.bodyPieces = bodyPieces;
         this.maxErrors = maxErrors;
         this.status = status;
     }

@@ -23,12 +23,12 @@ public class ServiceJogosConfig {
     private ConfigRepository configRepository;
 
     public ConfigJogosDto saveNewConfig(ConfigJogosTo body) throws BussinesException {
+        System.out.println("Body: " + body.getLevels());
         var saved = new ConfigJogosDomain();
         saved.setLevels(body.getLevels().stream().map(levelTo -> {
             var level = new NivelConfigDomain();
             level.setLevelName(levelTo.getLevelName());
             level.setDeathTime(levelTo.getDeathTime());
-            level.setBodyPieces(levelTo.getBodyPieces());
             level.setMoreSuggestions(levelTo.isMoreSuggestions());
             level.setMaxErrors(levelTo.getMaxErrors());
             level.setHintsAllowed(levelTo.isHintsAllowed());
@@ -61,7 +61,6 @@ public class ServiceJogosConfig {
                 saved.getLevels().stream().map(level -> new NivelConfigDto(
                         level.getLevelName(),
                         level.getDeathTime(),
-                        level.getBodyPieces(),
                         level.isMoreSuggestions(),
                         level.getMaxErrors(),
                         level.isHintsAllowed(),
