@@ -87,7 +87,9 @@ public class ServiceForcaJogo {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Jogo não encontrado"));
 
-        System.out.println("Palpite: " + palpite.getPalpite());
+        if ("Vitória".equals(jogoAtual.getStatus()) || "Derrota".equals(jogoAtual.getStatus())) {
+            return converterJogoDto(jogoAtual, palpite.getEmail(), "Jogo já foi finalizado.");
+        }
 
         String letraPalpite = palpite.getPalpite().toLowerCase();
         String palavraOriginal = jogoAtual.getPalavraSecreta().toLowerCase();
@@ -95,9 +97,10 @@ public class ServiceForcaJogo {
         List<String> palpites = jogoAtual.getPalpites();
 
         if (palpites.contains(letraPalpite)) {
-            throw new BussinesException("Letra já foi utilizada.");
+            return converterJogoDto(jogoAtual, palpite.getEmail(), "Letra já foi utilizada.");
         }
 
+        // 🟢 Processamento do palpite só acontece se o jogo estiver ativo
         palpites.add(letraPalpite);
         StringBuilder novaMascarada = new StringBuilder(palavraMascarada);
 
@@ -124,11 +127,7 @@ public class ServiceForcaJogo {
 
         forcaJogadorRepository.save(jogador);
 
-        if ("Vitória".equals(jogoAtual.getStatus()) || "Derrota".equals(jogoAtual.getStatus())) {
-            throw new BussinesException("Jogo finalizado.");
-        }
-
-        return converterJogoDto(jogoAtual, palpite.getEmail());
+        return converterJogoDto(jogoAtual, palpite.getEmail(), "Palpite registrado com sucesso.");
     }
 
 
@@ -136,7 +135,7 @@ public class ServiceForcaJogo {
         return new WordTo(palavra.getPalavra(), palavra.getDicas());
     }
 
-    public ForcaJogoResponseDto converterJogoDto(ForcaJogoDomain forcaJogoDomain, String email) {
+    public ForcaJogoResponseDto converterJogoDto(ForcaJogoDomain forcaJogoDomain, String email, String mensagem) {
         return new ForcaJogoResponseDto(
                 forcaJogoDomain.getGameId(),
                 forcaJogoDomain.getPalavraSecreta(),
@@ -144,7 +143,13 @@ public class ServiceForcaJogo {
                 forcaJogoDomain.getPalpites(),
                 forcaJogoDomain.getMaxErrors(),
                 email,
-                forcaJogoDomain.getStatus());
+                forcaJogoDomain.getStatus(),
+                mensagem
+        );
+    }
+
+    public ForcaJogoResponseDto converterJogoDto(ForcaJogoDomain forcaJogoDomain, String email) {
+        return converterJogoDto(forcaJogoDomain, email, null);
     }
 
     public WordDomain buscarPalavraAleatoria() {

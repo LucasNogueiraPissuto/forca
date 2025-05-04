@@ -20,4 +20,5 @@ public class ForcaJogoResponseDto {
     private int maxErrors;
     private String email;
     private String status;
+    private String mensagem;
 }
