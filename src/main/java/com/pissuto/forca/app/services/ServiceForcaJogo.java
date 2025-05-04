@@ -100,7 +100,6 @@ public class ServiceForcaJogo {
             return converterJogoDto(jogoAtual, palpite.getEmail(), "Letra já foi utilizada.");
         }
 
-        // 🟢 Processamento do palpite só acontece se o jogo estiver ativo
         palpites.add(letraPalpite);
         StringBuilder novaMascarada = new StringBuilder(palavraMascarada);
 
