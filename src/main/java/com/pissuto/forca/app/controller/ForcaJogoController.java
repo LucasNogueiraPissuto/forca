@@ -18,9 +18,10 @@ public class ForcaJogoController {
 
     public String dificuldade = "medium";
 
-    @GetMapping("/iniciar/{email}")
-    private ResponseEntity<ForcaJogoResponseDto> inciarJogo(@PathVariable String email) throws BussinesException {
-        return ResponseEntity.ok(serviceForcaJogo.iniciarNovoJogo(dificuldade, email));
+    @GetMapping("/iniciar")
+    public ResponseEntity<ForcaJogoResponseDto> iniciarJogo(@RequestParam(name = "email", required = false) String emailUsuario) throws BussinesException {
+        ForcaJogoResponseDto dto = serviceForcaJogo.iniciarNovoJogo(dificuldade, emailUsuario);
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping("/{id}/palpite")

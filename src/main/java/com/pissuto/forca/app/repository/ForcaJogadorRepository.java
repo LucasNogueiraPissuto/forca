@@ -17,6 +17,8 @@ public interface ForcaJogadorRepository extends MongoRepository<ForcaJogadorDoma
 
     Optional<ForcaJogadorDomain> findByEmail(String email);
 
+    Optional<ForcaJogadorDomain> findFirstByEmailIsNull();
+
     ForcaJogadorDomain save (ForcaJogadorDomain forcaJogadorDomain);
 
 }

@@ -38,30 +38,34 @@ public class ServiceForcaJogo {
 
 
     public ForcaJogoResponseDto iniciarNovoJogo(String dificuldade, String emailUsuario) throws BussinesException {
+        ConfigJogosDomain config = configRepository.findAll().get(0);
+        NivelConfigDomain configLevel = config.getLevels().stream()
+                .filter(l -> l.getLevelName().equalsIgnoreCase(dificuldade))
+                .findFirst()
+                .orElseThrow(() -> new BussinesException("Dificuldade não encontrada: " + dificuldade));
+
         WordTo palavraSelecionada = converterDomain(buscarPalavraAleatoria());
         String palavraMascarada = mascararPalavra(palavraSelecionada);
         List<String> palpites = new ArrayList<>();
 
-        ConfigJogosDomain config = configRepository.findAll().get(0);
-        NivelConfigDomain configLevel = config.getLevels()
-                .stream()
-                .filter(l -> l.getLevelName().equalsIgnoreCase(dificuldade))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Dificuldade não encontrada: " + dificuldade));
-
-        Optional<ForcaJogadorDomain> jogadorExistente = forcaJogadorRepository.findByEmail(emailUsuario);
-        ForcaJogadorDomain jogadorDomain;
-        int idJogo;
-
-        if (jogadorExistente.isPresent()) {
-            jogadorDomain = jogadorExistente.get();
-            idJogo = jogadorDomain.getForcaJogoDomains().size() + 1;
+        Optional<ForcaJogadorDomain> optJogador;
+        if (emailUsuario == null || emailUsuario.isBlank()) {
+            optJogador = forcaJogadorRepository.findFirstByEmailIsNull();
         } else {
-            jogadorDomain = new ForcaJogadorDomain();
-            jogadorDomain.setEmail(emailUsuario);
-            idJogo = 1;
+            optJogador = forcaJogadorRepository.findByEmail(emailUsuario);
         }
 
+        ForcaJogadorDomain jogadorDomain = optJogador.orElseGet(() -> {
+            ForcaJogadorDomain novo = new ForcaJogadorDomain();
+
+            novo.setEmail(emailUsuario == null || emailUsuario.isBlank() ? null : emailUsuario);
+
+            novo.setForcaJogoDomains(new ArrayList<>());
+            return novo;
+        });
+
+
+        int idJogo = jogadorDomain.getForcaJogoDomains().size() + 1;
         ForcaJogoDomain jogoDomain = new ForcaJogoDomain(
                 idJogo,
                 palavraSelecionada.getPalavra(),
