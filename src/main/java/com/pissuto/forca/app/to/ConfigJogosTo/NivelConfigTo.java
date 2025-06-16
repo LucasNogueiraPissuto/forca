@@ -17,9 +17,6 @@ public class NivelConfigTo {
     @JsonProperty("deathTime")
     private int deathTime;
 
-    @JsonProperty("moreSuggestions")
-    private boolean moreSuggestions;
-
     @JsonProperty("maxErrors")
     private int maxErrors;
 

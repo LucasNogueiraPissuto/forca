@@ -29,7 +29,6 @@ public class ServiceJogosConfig {
             var level = new NivelConfigDomain();
             level.setLevelName(levelTo.getLevelName());
             level.setDeathTime(levelTo.getDeathTime());
-            level.setMoreSuggestions(levelTo.isMoreSuggestions());
             level.setMaxErrors(levelTo.getMaxErrors());
             level.setHintsAllowed(levelTo.isHintsAllowed());
             level.setTimer(levelTo.isTimer());
@@ -61,7 +60,6 @@ public class ServiceJogosConfig {
                 saved.getLevels().stream().map(level -> new NivelConfigDto(
                         level.getLevelName(),
                         level.getDeathTime(),
-                        level.isMoreSuggestions(),
                         level.getMaxErrors(),
                         level.isHintsAllowed(),
                         level.isTimer(),
