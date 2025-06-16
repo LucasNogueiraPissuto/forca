@@ -58,7 +58,7 @@ public class ServiceForcaJogo {
         ForcaJogadorDomain jogadorDomain = optJogador.orElseGet(() -> {
             ForcaJogadorDomain novo = new ForcaJogadorDomain();
 
-            novo.setEmail(emailUsuario == null || emailUsuario.isBlank() ? null : emailUsuario);
+            novo.setEmail("");
 
             novo.setForcaJogoDomains(new ArrayList<>());
             return novo;
@@ -131,6 +131,63 @@ public class ServiceForcaJogo {
         forcaJogadorRepository.save(jogador);
 
         return converterJogoDto(jogoAtual, palpite.getEmail(), "Palpite registrado com sucesso.");
+    }
+
+    public ForcaJogoResponseDto tentarAdivinharPalavra(int id, PalpiteTo tentativa) throws BussinesException {
+        Optional<ForcaJogadorDomain> jogador = forcaJogadorRepository.findByEmail(tentativa.getEmail());
+        ForcaJogoDomain jogoJogador = null;
+        String mensagem;
+
+        if (jogador.isEmpty()) {
+            throw new BussinesException("Jogador não encontrado");
+        }
+
+        ForcaJogadorDomain jogadorExiste;
+
+        if (tentativa.getEmail() == null || tentativa.getEmail().isBlank()) {
+            jogadorExiste = forcaJogadorRepository.findAll()
+                    .stream()
+                    .filter(j -> j.getEmail() == null || j.getEmail().isBlank())
+                    .findFirst()
+                    .orElseThrow(() -> new BussinesException("Jogador anônimo não encontrado"));
+        } else {
+            jogadorExiste = forcaJogadorRepository.findByEmail(tentativa.getEmail())
+                    .orElseThrow(() -> new BussinesException("Jogador não encontrado"));
+        }
+
+        for(ForcaJogoDomain jogo : jogadorExiste.getForcaJogoDomains()) {
+            if (jogo.getGameId() == id) {
+                jogoJogador = jogo;
+                break;
+            }
+        }
+        if (jogoJogador == null){
+            throw new BussinesException("Jogo não encontrado");
+        }
+
+        if (!jogoJogador.getStatus().equalsIgnoreCase("Em andamento...")) {
+            throw new BussinesException("Esse jogo já foi finalizado.");
+        }
+
+        if(jogoJogador.getPalpites().size() <= 3) {
+            if (tentativa.getPalpite().equalsIgnoreCase(jogoJogador.getPalavraSecreta())) {
+                jogoJogador.setPalavraMascarada(tentativa.getPalpite());
+                jogoJogador.setStatus("Vitoria!");
+                mensagem = "Palavra certo! Você venceu!";
+            } else {
+                jogoJogador.setMaxErrors(0);
+                jogoJogador.setStatus("Derrota");
+                mensagem = "Palavra errado! Você perdeu!";
+            }
+        }
+        else {
+            throw new BussinesException("O chute da palavra so é permitido nos tres primeiros palpites");
+        }
+
+        forcaJogadorRepository.save(jogadorExiste);
+
+
+        return converterJogoDto(jogoJogador, tentativa.getEmail(), mensagem);
     }
 
 

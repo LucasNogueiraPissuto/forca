@@ -28,4 +28,10 @@ public class ForcaJogoController {
     private ResponseEntity<ForcaJogoResponseDto> validarPalpite(@PathVariable int id, @RequestBody PalpiteTo palpite) throws BussinesException {
         return ResponseEntity.ok(serviceForcaJogo.validarPalpite(id, palpite));
     }
+
+    @PostMapping("/{id}/adivinhar")
+    private ResponseEntity<ForcaJogoResponseDto> tentarAdivinharPalavra(@PathVariable int id, @RequestBody PalpiteTo tentativa) throws BussinesException {
+        return ResponseEntity.ok(serviceForcaJogo.tentarAdivinharPalavra(id, tentativa));
+    }
+
 }
