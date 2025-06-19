@@ -25,4 +25,10 @@ public class ForcaJogadorDomain {
         this.email = emailUsuario;
         this.forcaJogoDomains.add(jogoDomain);
     }
+
+    public ForcaJogadorDomain(String email, List<ForcaJogoDomain> jogos) {
+        this.email = email;
+        this.forcaJogoDomains = jogos;
+    }
+
 }

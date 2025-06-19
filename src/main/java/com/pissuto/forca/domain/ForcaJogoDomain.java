@@ -19,7 +19,13 @@ public class ForcaJogoDomain {
 
     private String palavraSecreta;
 
+    private String wordId;
+
     private String palavraMascarada;
+
+    private List<String> dicas;
+
+    private int dicasUsadas = 0;
 
     private List<String> palpites;
 
@@ -27,10 +33,13 @@ public class ForcaJogoDomain {
 
     private String status;
 
-    public ForcaJogoDomain(int gameId, String palavraSecreta, String palavraMascarada, List<String> palpites, int maxErrors, String status) {
+    public ForcaJogoDomain(int gameId, String palavraSecreta, String wordId, String palavraMascarada, List<String> dicas, int dicasUsadas, List<String> palpites, int maxErrors, String status) {
         this.gameId = gameId;
         this.palavraSecreta = palavraSecreta;
+        this.wordId = wordId;
         this.palavraMascarada = palavraMascarada;
+        this.dicas = dicas;
+        this.dicasUsadas = dicasUsadas;
         this.palpites = palpites;
         this.maxErrors = maxErrors;
         this.status = status;

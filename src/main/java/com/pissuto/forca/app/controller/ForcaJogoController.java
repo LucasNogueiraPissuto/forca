@@ -34,4 +34,9 @@ public class ForcaJogoController {
         return ResponseEntity.ok(serviceForcaJogo.tentarAdivinharPalavra(id, tentativa));
     }
 
+    @GetMapping("/{id}/dica")
+    private ResponseEntity<ForcaJogoResponseDto> fornecerDica(@PathVariable int id, @RequestParam String email) throws BussinesException {
+        return ResponseEntity.ok(serviceForcaJogo.fornecerDica(id, email));
+    }
+
 }

@@ -15,7 +15,9 @@ public class ForcaJogoResponseDto {
 
     private int gameId;
     private String palavraSecreta;
+    private String wordId;
     private String palavraMascarada;
+    private List<String> dicas;
     private List<String> palpites;
     private int maxErrors;
     private String email;
