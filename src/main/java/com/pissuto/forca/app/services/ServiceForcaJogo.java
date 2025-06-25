@@ -1,25 +1,21 @@
 package com.pissuto.forca.app.services;
 
-import com.pissuto.forca.app.dto.ForcaJogadorResponseDto;
 import com.pissuto.forca.app.dto.ForcaJogoResponseDto;
 import com.pissuto.forca.app.repository.ConfigRepository;
 import com.pissuto.forca.app.repository.ForcaJogadorRepository;
 import com.pissuto.forca.app.repository.WordRepository;
 import com.pissuto.forca.app.to.PalpiteTo;
 import com.pissuto.forca.app.to.WordTo;
-import com.pissuto.forca.domain.ConfigJogosDomain.ConfigJogosDomain;
 import com.pissuto.forca.domain.ConfigJogosDomain.NivelConfigDomain;
 import com.pissuto.forca.domain.ForcaJogadorDomain;
 import com.pissuto.forca.domain.ForcaJogoDomain;
 import com.pissuto.forca.domain.WordDomain;
 import com.pissuto.forca.infra.exceptions.BussinesException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -30,6 +26,8 @@ public class ServiceForcaJogo {
     @Autowired private ConfigRepository configRepository;
 
     private final Random random = new Random();
+
+    ForcaJogadorDomain jogadorAnonimo = new ForcaJogadorDomain("", new ArrayList<>());
 
     public ForcaJogoResponseDto iniciarNovoJogo(String dificuldade, String email) throws BussinesException {
         NivelConfigDomain nivel = buscarNivelConfig(dificuldade);
@@ -52,7 +50,9 @@ public class ServiceForcaJogo {
         );
 
         jogador.getForcaJogoDomains().add(novoJogo);
-        jogadorRepository.save(jogador);
+        if (email != null && !email.isBlank() ){
+            jogadorRepository.save(jogador);
+        }
 
         return converterJogoDto(novoJogo, email);
     }
@@ -137,13 +137,14 @@ public class ServiceForcaJogo {
 
     private ForcaJogadorDomain buscarOuCriarJogador(String email) {
         return (email == null || email.isBlank())
-                ? jogadorRepository.findFirstByEmailIsNull().orElseGet(() -> new ForcaJogadorDomain("", new ArrayList<>()))
+                ? jogadorAnonimo
                 : jogadorRepository.findByEmail(email).orElseGet(() -> new ForcaJogadorDomain(email, new ArrayList<>()));
     }
 
     private ForcaJogadorDomain buscarJogador(String email) throws BussinesException {
-        return jogadorRepository.findByEmail(email)
-                .orElseThrow(() -> new BussinesException("Jogador não encontrado"));
+        return (email == null || email.isBlank())
+                ? jogadorAnonimo
+                : jogadorRepository.findByEmail(email).orElseThrow(() -> new BussinesException("Jogador não encontrado"));
     }
 
     private ForcaJogoDomain buscarJogo(ForcaJogadorDomain jogador, int id) throws BussinesException {

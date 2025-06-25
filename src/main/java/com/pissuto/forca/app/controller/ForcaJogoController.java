@@ -35,7 +35,7 @@ public class ForcaJogoController {
     }
 
     @GetMapping("/{id}/dica")
-    private ResponseEntity<ForcaJogoResponseDto> fornecerDica(@PathVariable int id, @RequestParam String email) throws BussinesException {
+    private ResponseEntity<ForcaJogoResponseDto> fornecerDica(@PathVariable int id, @RequestParam(name = "email", required = false) String email) throws BussinesException {
         return ResponseEntity.ok(serviceForcaJogo.fornecerDica(id, email));
     }
 
