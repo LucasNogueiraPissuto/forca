@@ -31,7 +31,7 @@ public class ServiceForcaJogo {
 
     public ForcaJogoResponseDto iniciarNovoJogo(String dificuldade, String email) throws BussinesException {
         NivelConfigDomain nivel = buscarNivelConfig(dificuldade);
-        WordDomain palavraDomain = buscarPalavraAleatoria();
+        WordDomain palavraDomain = buscarPalavraAleatoria(email);
         WordTo palavraTo = converterDomain(palavraDomain);
         String palavraMascarada = mascararPalavra(palavraTo);
 
@@ -207,11 +207,26 @@ public class ServiceForcaJogo {
         return new WordTo(palavra.getPalavra(), palavra.getDicas());
     }
 
-    public WordDomain buscarPalavraAleatoria() {
+    public WordDomain buscarPalavraAleatoria(String email) throws BussinesException {
         List<WordDomain> palavras = palavraRepository.findAll();
-        if (palavras.isEmpty()) {
-            throw new RuntimeException("Não há palavras cadastradas no banco de dados.");
+
+        ForcaJogadorDomain jogador = buscarJogador(email);
+        List<ForcaJogoDomain> jogos = jogador.getForcaJogoDomains();
+
+        List<String> palavrasAdivinhadas = new ArrayList<>();
+
+        for (ForcaJogoDomain jogo : jogos) {
+            if (jogo.getStatus().equals("Vitória!")) {
+                palavrasAdivinhadas.add(jogo.getPalavraSecreta());
+            }
         }
+
+        palavras.removeIf(p -> palavrasAdivinhadas.contains(p.getPalavra()));
+
+        if (palavras.isEmpty()) {
+            throw new RuntimeException("Não há palavras disponiveis");
+        }
+
         return palavras.get(random.nextInt(palavras.size()));
     }
 
