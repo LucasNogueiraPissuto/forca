@@ -29,6 +29,8 @@ public class ServiceForcaJogo {
 
     ForcaJogadorDomain jogadorAnonimo = new ForcaJogadorDomain("", new ArrayList<>());
 
+    List<String> palavrasAdivinhadas = new ArrayList<>();
+
     public ForcaJogoResponseDto iniciarNovoJogo(String dificuldade, String email) throws BussinesException {
         NivelConfigDomain nivel = buscarNivelConfig(dificuldade);
         WordDomain palavraDomain = buscarPalavraAleatoria(email);
@@ -89,7 +91,7 @@ public class ServiceForcaJogo {
 
         if (chute.equalsIgnoreCase(jogo.getPalavraSecreta())) {
             jogo.setPalavraMascarada(jogo.getPalavraSecreta());
-            jogo.setStatus("Vitoria!");
+            jogo.setStatus("Vitória!");
             mensagem = "Palavra certa! Você venceu!";
         } else {
             jogo.setMaxErrors(0);
@@ -210,10 +212,8 @@ public class ServiceForcaJogo {
     public WordDomain buscarPalavraAleatoria(String email) throws BussinesException {
         List<WordDomain> palavras = palavraRepository.findAll();
 
-        ForcaJogadorDomain jogador = buscarJogador(email);
+        ForcaJogadorDomain jogador = buscarOuCriarJogador(email);
         List<ForcaJogoDomain> jogos = jogador.getForcaJogoDomains();
-
-        List<String> palavrasAdivinhadas = new ArrayList<>();
 
         for (ForcaJogoDomain jogo : jogos) {
             if (jogo.getStatus().equals("Vitória!")) {
