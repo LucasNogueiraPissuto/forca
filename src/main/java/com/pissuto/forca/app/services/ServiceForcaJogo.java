@@ -217,11 +217,11 @@ public class ServiceForcaJogo {
 
         for (ForcaJogoDomain jogo : jogos) {
             if (jogo.getStatus().equals("Vitória!")) {
-                palavrasAdivinhadas.add(jogo.getPalavraSecreta());
+                palavrasAdivinhadas.add(jogo.getWordId());
             }
         }
 
-        palavras.removeIf(p -> palavrasAdivinhadas.contains(p.getPalavra()));
+        palavras.removeIf(p -> palavrasAdivinhadas.contains(p.getId()));
 
         if (palavras.isEmpty()) {
             throw new RuntimeException("Não há palavras disponiveis");
