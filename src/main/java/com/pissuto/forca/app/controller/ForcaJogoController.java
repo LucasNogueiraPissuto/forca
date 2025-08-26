@@ -4,13 +4,18 @@ import com.pissuto.forca.app.dto.ForcaJogadorResponseDto;
 import com.pissuto.forca.app.dto.ForcaJogoResponseDto;
 import com.pissuto.forca.app.services.ServiceForcaJogo;
 import com.pissuto.forca.app.to.PalpiteTo;
+import com.pissuto.forca.domain.ForcaJogadorDomain;
+import com.pissuto.forca.domain.ForcaJogoDomain;
 import com.pissuto.forca.infra.exceptions.BussinesException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/jogo")
+@CrossOrigin("*")
 public class ForcaJogoController {
 
     @Autowired
@@ -39,4 +44,18 @@ public class ForcaJogoController {
         return ResponseEntity.ok(serviceForcaJogo.fornecerDica(id, email));
     }
 
+    @GetMapping("/UsuariosAnonimos")
+    private ResponseEntity<ForcaJogadorDomain> visualizarUsuariosAnonimos(){
+        return ResponseEntity.ok(serviceForcaJogo.visualizarAnonimo());
+    }
+
+    @GetMapping("/{id}/{email}")
+    private ResponseEntity<ForcaJogoResponseDto> getJogoById(@PathVariable int id, @PathVariable String email) throws BussinesException {
+        return ResponseEntity.ok(serviceForcaJogo.bucasJogoById(id, email));
+    }
+
+    @GetMapping("/{email}")
+    private ResponseEntity<List<ForcaJogoDomain>> getJogos(@PathVariable String email) throws BussinesException {
+        return ResponseEntity.ok(serviceForcaJogo.buscarJogosJogador(email));
+    }
 }

@@ -1,5 +1,6 @@
 package com.pissuto.forca.app.dto;
 
+import com.pissuto.forca.domain.ForcaJogoDomain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

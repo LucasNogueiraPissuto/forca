@@ -1,5 +1,6 @@
 package com.pissuto.forca.app.services;
 
+import com.pissuto.forca.app.dto.ForcaJogadorResponseDto;
 import com.pissuto.forca.app.dto.ForcaJogoResponseDto;
 import com.pissuto.forca.app.repository.ConfigRepository;
 import com.pissuto.forca.app.repository.ForcaJogadorRepository;
@@ -14,9 +15,7 @@ import com.pissuto.forca.infra.exceptions.BussinesException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class ServiceForcaJogo {
@@ -71,7 +70,9 @@ public class ServiceForcaJogo {
         }
 
         processarPalpite(jogo, letra);
-        jogadorRepository.save(jogador);
+        if (palpite.getEmail() != null && !palpite.getEmail().isBlank() ){
+            jogadorRepository.save(jogador);
+        }
 
         return converterJogoDto(jogo, palpite.getEmail(), "Palpite registrado com sucesso.");
     }
@@ -126,6 +127,30 @@ public class ServiceForcaJogo {
 
         jogadorRepository.save(jogador);
         return converterJogoDto(jogo, email, "Dica fornecida!");
+    }
+
+    public ForcaJogadorDomain visualizarAnonimo(){
+        return jogadorAnonimo;
+    }
+
+    public ForcaJogoResponseDto bucasJogoById(int id, String email) throws BussinesException {
+        ForcaJogadorDomain jogagor = buscarJogador(email);
+        ForcaJogoDomain jogo = buscarJogo(jogagor, id);
+
+        return new ForcaJogoResponseDto(jogo.getGameId(), jogo.getPalavraSecreta(), jogo.getWordId(), jogo.getPalavraMascarada(), jogo.getDicas(), jogo.getPalpites(),jogo.getMaxErrors(), jogagor.getEmail(), jogo.getStatus(), "Jogo buscado");
+    }
+
+    public List<ForcaJogoDomain> buscarJogosJogador(String email) throws BussinesException {
+        Optional<ForcaJogadorDomain> jogadorDomainOptional = jogadorRepository.findByEmail(email);
+
+        if (jogadorDomainOptional.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        ForcaJogadorDomain jogoDomain = jogadorDomainOptional.get();
+
+        // Retorna lista vazia se não houver jogos
+        return jogoDomain.getForcaJogoDomains();
     }
 
     // ----------------------- Métodos auxiliares -----------------------
@@ -234,4 +259,3 @@ public class ServiceForcaJogo {
         return palavra.getPalavra().replaceAll(".", "_");
     }
 }
-
